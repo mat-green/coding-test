@@ -1,9 +1,14 @@
 {% extends "index.html" %}
 {% block content %}
-    <h1>Stores:</h1>
-    <ul>
+    <div style="float: left">
+        <h1>Stores:</h1>
+        <ul>
 {% for store in stores %}
-        <li>{{ store.name|e }}, {{ store.postcode|e }} {{ store.longitude|e }} {{ store.latitude|e }} </li>
+            <li>{{ store.name|e }}, {{ store.postcode|e }} {{ store.longitude|e }} {{ store.latitude|e }} </li>
 {% endfor %}
-    </ul>
+        </ul>
+    </div>
+    <div style="float: right; width: 100px; height: auto">
+        <div class="tenor-gif-embed" data-postid="7597488" data-share-method="host" data-width="100%" data-aspect-ratio="0.6395348837209303"><a href="https://tenor.com/view/muttley-laughing-gif-7597488">Muttley Laughing GIF</a> from <a href="https://tenor.com/search/muttley-gifs">Muttley GIFs</a></div><script type="text/javascript" async src="https://tenor.com/embed.js"></script>
+    </div>
 {% endblock %}
