@@ -24,7 +24,7 @@ def client():
     ctx.pop()
 
 
-def test_empty_db(client):
+def test_request(client):
     """Start with a blank database."""
 
     response = client.get('/')
