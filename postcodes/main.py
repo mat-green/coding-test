@@ -5,11 +5,16 @@ import json
 import os
 import requests
 
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 
 
 def create_app():
     app = Flask(__name__)
+
+    def find_store_by_postcode(postcode):
+        url = f"http://api.postcodes.io/postcodes/{postcode}"
+        response = requests.get(url)
+        return response.json()
 
     @app.route("/")
     def stores_list():
@@ -37,6 +42,40 @@ def create_app():
             return render_template('stores.html',
                                    stores=sorted_data,
                                    now=datetime.datetime.utcnow())
+
+                                   
+    @app.route("/find/")
+    def find_stores():
+        """Provides a of finding stores within a given radius of a postcode"""
+        postcode = request.args.get('postcode', '')
+        radius = request.args.get('radius', 20000)
+        # retrieve longitude and latitude from postcodes.io
+        response_json = find_store_by_postcode(postcode)
+        stores = []
+        if response_json['result']:
+            # assuming only 1 entry
+            longitude = response_json['result']['longitude']
+            latitude = response_json['result']['latitude']
+            data = { 'longitude': longitude, 'latitude': latitude, 'radius': radius }
+            response = requests.get('http://api.postcodes.io/postcodes',
+                                    params=data)
+            response_json = response.json()
+            file_uri = os.path.join(os.path.dirname(__file__), 'stores.json')
+            unsorted_data = []
+            with open(file_uri, 'r', encoding='utf-8') as file:
+                file_data=file.read().replace('\n', '')
+                json_data=json.loads(file_data)
+                for entry in response_json['result']:
+                    found_stores = [store for store in json_data if store['postcode'] == entry['postcode']]
+                    for store in found_stores:
+                        response_json = find_store_by_postcode(postcode)
+                        if response_json['result']:
+                            store['longitude'] = response_json['result']['longitude']
+                            store['latitude'] = response_json['result']['latitude']
+                        unsorted_data.append(store)
+            stores = sorted(unsorted_data, key=lambda kv: kv['latitude'], reverse = True)
+        return json.dumps(stores)
+
 
     return app
 
