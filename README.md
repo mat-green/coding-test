@@ -60,3 +60,10 @@ This assumes you are in the root of the application folder using cli:
 python3 setup.py develop
 pytest
 ```
+
+### Execution: Web Server
+This assumes you are in the root of the application folder using cli:
+```bash
+FLASK_APP=postcodes/main.py flask run
+```
+You can now view the application in a browser via [http://127.0.0.1:5000/](http://127.0.0.1:5000/)

@@ -1,0 +1,4 @@
+# Python generated folders and files
+.ve/
+postcodes.egg-info/
+__pycache__
