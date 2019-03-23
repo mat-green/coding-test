@@ -43,7 +43,6 @@ def create_app():
                                    stores=sorted_data,
                                    now=datetime.datetime.utcnow())
 
-                                   
     @app.route("/find/")
     def find_stores():
         """Provides a of finding stores within a given radius of a postcode"""
@@ -75,7 +74,6 @@ def create_app():
                         unsorted_data.append(store)
             stores = sorted(unsorted_data, key=lambda kv: kv['latitude'], reverse = True)
         return json.dumps(stores)
-
 
     return app
 
